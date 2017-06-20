@@ -12,10 +12,11 @@ STATUS = (
 class Person(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    address = models.TextField()
+    contact_number = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
     country = models.CharField(max_length=255, default="Philippines")
-    identification_type = models.CharField(max_length=255)
-    identification_id = models.CharField(max_length=255)
+    identification_type = models.CharField(max_length=255, blank=True)
+    identification_id = models.CharField(max_length=255, blank=True)
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
@@ -24,9 +25,8 @@ class Person(models.Model):
         return self.full_name()
 
 
-
 class Remittance(models.Model):
-    source_reference_number = models.CharField(max_length=255)
+    source_reference_number = models.CharField(max_length=255, unique=True)
     remitter = models.ForeignKey(Person, related_name="remitter")
     beneficiary = models.ForeignKey(Person, related_name="beneficiary")
     date_created = models.DateTimeField(auto_now_add=True)
