@@ -3,6 +3,8 @@ from .serializers import RemittanceSerializer, RemittancePaySerializer
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 import logging
 logger = logging.getLogger()
@@ -25,6 +27,8 @@ class RemittanceList(generics.ListCreateAPIView):
 
     queryset = Remittance.objects.all()
     serializer_class = RemittanceSerializer
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -46,9 +50,10 @@ class RemittanceDetail(generics.RetrieveUpdateAPIView):
     Usage:
         PUT /v1/remittance/<slug>
     """
-
     queryset = Remittance.objects.all()
     serializer_class = RemittanceSerializer
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
     lookup_field = 'slug'
 
     def get(self, request, *args, **kwargs):
@@ -62,6 +67,8 @@ class RemittancePay(generics.GenericAPIView):
     """Tag Remittance Transaction as Paid."""
     queryset = Remittance.objects.all()
     serializer_class = RemittancePaySerializer
+    authentication_classes = (BasicAuthentication,)
+    permission_classes = (IsAuthenticated,)
     lookup_field = 'slug'
 
     def status_check(self, remittance_status):
