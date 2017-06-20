@@ -9,14 +9,19 @@ STATUS = (
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     address = models.TextField()
     country = models.CharField(max_length=255, default="Philippines")
     identification_type = models.CharField(max_length=255)
     identification_id = models.CharField(max_length=255)
 
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
-        return self.name
+        return self.full_name()
+
 
 
 class Remittance(models.Model):
