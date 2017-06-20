@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 
 STATUS = (
         ("AVAILABLE", "AVAILABLE"),
@@ -38,6 +39,9 @@ class Remittance(models.Model):
 
     def __str__(self):
         return self.source_reference_number
+
+    def get_absolute_url(self):
+        return reverse('partner:detail', kwargs={'slug': self.slug})
 
     def save(self, *args, **kwargs):
         """Source Reference Number is used as Slug."""
