@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+{{ object }}
+<table class=striped>
+    <thead>
+        <td>type</td>
+        <td>detail</td>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Source Reference Number</td>
+        <td>{{ object.source_reference_number }}</td>
+    </tr>
+    <tr>
+        <td><strong>Remitter</strong></td>
+        <td>{{ object.remitter }}</td>
+    </tr>
+    <tr>
+        <td><strong>Beneficiary</strong></td>
+        <td>{{ object.beneficiary }}</td>
+    </tr>
+    <tr>
+        <td><strong>Date Created</strong></td>
+        <td>{{ object.date_created }}</td>
+    </tr>
+    <tr>
+        <td><strong>Payout Amount</strong></td>
+        <td>{{ object.payout_amount }}</td>
+    </tr>
+    <tr>
+        <td><strong>Status</strong></td>
+        <td>{{ object.status }}</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}

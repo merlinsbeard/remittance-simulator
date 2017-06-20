@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container">
+    {% for object in object_list %}
+    <h2><a href="{{ object.get_absolute_url }}">{{ object.slug }}</a></h2>
+    {% endfor %}
+</div>
+{% endblock %}
