@@ -4,3 +4,4 @@
 /venv
 /env
 /static
+*.sqlite3
