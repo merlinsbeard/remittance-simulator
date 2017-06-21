@@ -32,6 +32,18 @@ class RemittanceSerializer(serializers.HyperlinkedModelSerializer):
                  "status",
                  )
 
+    def validate_payout_amount(self, value):
+        amount = value
+        cents = abs(value) % 100
+        if amount < 1000:
+            error_message = "Amount Should be greatern than 1000"
+            raise serializers.ValidationError(error_message)
+        elif cents > 0:
+            error_message = "No cents allowed"
+            raise serializers.ValidationError(error_message)
+        else:
+            return value
+
     def create(self, validated_data):
         remitter = validated_data.pop('remitter')
         remitter = Person.objects.create(**remitter)

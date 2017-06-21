@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 STATUS = (
         ("AVAILABLE", "AVAILABLE"),
@@ -42,6 +44,15 @@ class Remittance(models.Model):
 
     def get_absolute_url(self):
         return reverse('partner:detail', kwargs={'slug': self.slug})
+
+    def clean(self):
+        amount = self.payout_amount
+        cents = abs(amount) % 100
+        if amount < 1000:
+            raise ValidationError(_('Amount should be greater than 1000'))
+
+        if cents > 0:
+            raise ValidationError(_('No Cents Allowed'))
 
     def save(self, *args, **kwargs):
         """Source Reference Number is used as Slug."""
