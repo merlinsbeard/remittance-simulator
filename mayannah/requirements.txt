@@ -1,8 +1,10 @@
+arrow==0.10.0
 Django==1.11.2
 django-environ==0.4.3
 djangorestframework==3.6.3
 gunicorn==19.7.1
 psycopg2==2.7.1
+python-dateutil==2.6.0
 pytz==2017.2
 six==1.10.0
 sqlparse==0.2.3
