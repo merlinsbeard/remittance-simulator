@@ -1,7 +1,7 @@
 *.pyc
 *.swo
 *.swp
-/venv
-/env
-/static
+venv/
+env/
+static/
 *.sqlite3
