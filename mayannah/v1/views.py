@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+import arrow
 import logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -105,6 +106,8 @@ class RemittancePay(generics.GenericAPIView):
         if data['source_reference_number'] == remittance.source_reference_number:
             """Pay Remittance"""
             remittance.status = "PAID"
+            now = arrow.now().datetime
+            remittance.date_paid_out = now
             remittance.save()
             message = "Successfully Tagged as Paid"
             return Response({"message": message})
