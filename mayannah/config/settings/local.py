@@ -6,3 +6,4 @@ INSTALLED_APPS += [
     'partner',
     'rest_framework',
 ]
+ALLOWED_HOSTS = ['*']
