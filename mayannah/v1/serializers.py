@@ -28,6 +28,8 @@ class RemittanceSerializer(serializers.HyperlinkedModelSerializer):
                  "remitter",
                  "beneficiary",
                  "payout_amount",
+                 "date_created",
+                 "date_paid_out",
                  "payout_currency",
                  "status",
                  )

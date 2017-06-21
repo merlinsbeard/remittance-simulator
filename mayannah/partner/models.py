@@ -32,6 +32,7 @@ class Remittance(models.Model):
     remitter = models.ForeignKey(Person, related_name="remitter")
     beneficiary = models.ForeignKey(Person, related_name="beneficiary")
     date_created = models.DateTimeField(auto_now_add=True)
+    date_paid_out = models.DateTimeField(blank=True)
     payout_amount = models.IntegerField()
     payout_currency = models.CharField(max_length=10, default="PH")
     slug = models.SlugField(max_length=255, blank=True)
