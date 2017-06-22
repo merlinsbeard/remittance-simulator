@@ -22,6 +22,22 @@ $ docker exec -it mayannah python manage.py createsuperuser
 
 ## Usage
 
+### Environment Variables
+
+Mayannah uses the file `prod.env` for its environment variable. Edit as needed
+
+| Name | Description |
+|------|-------------|
+| DATABASE_URL | Configuration for Database |
+| SENTRY | DSN of sentry |
+
+Reference:
+
+[Django Environ](https://github.com/joke2k/django-environ)
+[Sentry](https://sentry.io/)
+
+
+
 ### Admin Page
 
 `http://localhost:8000/admin/`

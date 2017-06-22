@@ -11,6 +11,7 @@ DEBUG = False
 INSTALLED_APPS += [
     'partner',
     'rest_framework',
+    'raven.contrib.django.raven_compat',
 ]
 ALLOWED_HOSTS = ['*']
 
@@ -20,3 +21,14 @@ DATABASES = {
 }
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+import os
+import raven
+
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY'),
+    # If you are using git, you can also automatically configure
+    # the
+    # release based on the git info.
+    #'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
