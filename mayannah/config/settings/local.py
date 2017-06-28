@@ -17,6 +17,7 @@ INSTALLED_APPS += [
     'allauth.account',
     'allauth.socialaccount',
 #    'allauth.socialaccount.providers.github',
+    'person',
 ]
 ALLOWED_HOSTS = ['*']
 
