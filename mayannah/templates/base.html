@@ -12,10 +12,10 @@
 <body>
 OLA OLAola
 {% if user.is_authenticated %}
-<a href=""{% url 'account_logout' %}
+<a href="{% url 'account_logout' %}"
 >logout</a>
 {% else %}
-<a href=""{% url 'account_login' %}
+<a href="{% url 'account_login' %}"
 >login</a>
 {% endif %}
 {% block body %}
