@@ -10,14 +10,28 @@
           <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 </head>
 <body>
-OLA OLAola
-{% if user.is_authenticated %}
-<a href="{% url 'account_logout' %}"
->logout</a>
-{% else %}
-<a href="{% url 'account_login' %}"
->login</a>
-{% endif %}
+    <header>
+        <div class="container">
+            <ul>
+                <li>
+                    <a href="{% url 'profile:self' %}">Profile</a>
+                </li>
+                <li>
+                    <a href="{% url 'partner:list' %}">Remittance</a>
+                </li>
+                <li>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'account_logout' %}"
+                    >Logout</a>
+                    {% else %}
+                    <a href="{% url 'account_login' %}"
+                    >Login</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+
+    </header>
 {% block body %}
 <div class="container">
 

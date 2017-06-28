@@ -3,8 +3,9 @@
 {% block body %}
 
 <div class="container">
+    <h2>Welcome {{ object.user.username|title }},</h2>
     <p>
-        {{ object }}
+        {{ object.description }}
     </p>
 </div>
 
