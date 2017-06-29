@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic import RedirectView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -23,4 +24,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls',
                        namespace='rest_framework')),
     url(r'^v1/', include('v1.urls', namespace='v1')),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^profile/', include('person.urls', namespace='profile')),
+    url('^$', RedirectView.as_view(pattern_name='profile:self'), name='home'),
 ]
