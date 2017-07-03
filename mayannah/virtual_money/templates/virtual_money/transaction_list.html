@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+    <table class="bordered">
+        <thead>
+            <tr>
+                <th>Reference ID</th>
+                <th>Receiver</th>
+                <th>Deposit or Withdraw</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+    {% for object in object_list %}
+        <tr>
+            <td>{{ object.reference_id }}</td>
+            <td>{{ object.receiver }}</td>
+            <td>
+                {% if object.is_deposit %}
+                Deposit
+                {% else %}
+                Withdraw
+                {% endif %}
+            </td>
+            <td>{{ object.amount }}</td>
+            <td>
+                {% if object.is_complete %}
+                Complete
+                {% else %}
+                Not Complete
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    {% endfor %}
+</div>
+{% endblock %}
