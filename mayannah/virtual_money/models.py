@@ -16,15 +16,43 @@ class DepositManager(models.Manager):
         return super(DepositManager,
                      self).get_queryset().filter(is_deposit=True)
 
+    def receive(self, receiver):
+        """Filter deposit transaction of receiver."""
+        return super(
+                DepositManager,
+                self).get_queryset().filter(
+                        is_deposit=True,
+                        receiver=receiver)
+
+    def send(self, sender):
+        """Filter senders deposit transactions."""
+        return super(
+                DepositManager,
+                self).get_queryset().filter(
+                        is_deposit=True,
+                        sender=sender)
+
 
 class WithdrawManager(models.Manager):
-    """Filter not deposit transactions only."""
+    """Filter Withdrawal transactions only."""
     def get_queryset(self):
-        return super(DepositManager,
+        return super(WithdrawManager,
                      self).get_queryset().filter(is_deposit=False)
+
+    def receive(self, receiver):
+        """Filter withdrawal transactions of receiver."""
+        return super(
+                WithdrawManager,
+                self).get_queryset().filter(
+                        is_deposit=False,
+                        receiver=receiver)
 
 
 class Transaction(models.Model):
+    """Model for Transaction.
+
+    reference_id is the unique identifier for the model
+    """
     reference_id = models.CharField(max_length=255, unique=True)
     receiver = models.ForeignKey(User, related_name='receiver')
     sender = models.ForeignKey(User, related_name='sender')
