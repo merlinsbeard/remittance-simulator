@@ -36,5 +36,6 @@ class RemittanceTests(TestCase):
         self.assertEqual(remittance.slug, "uno-remit")
 
     def test_remittance_page(self):
+        """302 since it needs authentication to log."""
         response = self.client.get('/remittance/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)

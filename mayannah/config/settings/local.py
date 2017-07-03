@@ -11,6 +11,7 @@ DEBUG = True
 INSTALLED_APPS += [
     'partner',
     'rest_framework',
+    'virtual_money',
     'raven.contrib.django.raven_compat',
     'django.contrib.sites',
     'allauth',
