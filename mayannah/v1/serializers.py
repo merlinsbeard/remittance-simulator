@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from partner.models import Person, Remittance
+from virtual_money.models import Transaction
+from django.contrib.auth.models import User
 
 
 class PersonSerializer(serializers.ModelSerializer):
@@ -69,3 +71,46 @@ class RemittanceSerializer(serializers.HyperlinkedModelSerializer):
 
 class RemittancePaySerializer(serializers.Serializer):
     source_reference_number = serializers.CharField(max_length=255)
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    receiver = serializers.CharField(max_length=255)
+    sender = serializers.StringRelatedField()
+
+    class Meta:
+        model = Transaction
+        fields = (
+                "reference_id",
+                "receiver",
+                "sender",
+                "amount",
+                "date_created",
+                "is_deposit",
+                )
+
+    def validate_receiver(self, value):
+        try:
+            person = User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User Not Existing")
+        return person
+
+
+class TransactionDetailSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField()
+    receiver = serializers.StringRelatedField()
+
+    class Meta:
+        model = Transaction
+        fields = (
+                "reference_id",
+                "receiver",
+                "sender",
+                "amount",
+                "date_created",
+                "status",
+                )
+
+
+class TransactionCompleteSerializer(serializers.Serializer):
+    reference_id = serializers.CharField(max_length=255)
