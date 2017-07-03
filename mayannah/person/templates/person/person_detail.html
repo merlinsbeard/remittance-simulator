@@ -7,6 +7,72 @@
     <p>
         {{ object.description }}
     </p>
+    <p>MONEY
+    {{ money }}</p>
+</div>
+
+<div class="container">
+    <h3>Received</h3>
+    <table class="bordered">
+        <thead>
+            <td>Reference ID</td>
+            <td>Date Created</td>
+            <td>From</td>
+            <td>Amount</td>
+            <td>Status</td>
+        </thead>
+        {% for t in deposits %}
+        <tr>
+            <td>{{ t.reference_id }}</td>
+            <td>{{ t.date_created }}</td>
+            <td>{{ t.sender }}</td>
+            <td>{{ t.amount }}</td>
+            <td>{{ t.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Transfered</h3>
+    <table class="bordered">
+        <thead>
+            <td>Reference ID</td>
+            <td>Date Created</td>
+            <td>To</td>
+            <td>Amount</td>
+            <td>Status</td>
+        </thead>
+        {% for t in send %}
+        <tr>
+            <td>{{ t.reference_id }}</td>
+            <td>{{ t.date_created }}</td>
+            <td>{{ t.sender }}</td>
+            <td>{{ t.amount }}</td>
+            <td>{{ t.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Withdrawn</h3>
+    <table class="bordered">
+        <thead>
+            <td>Reference ID</td>
+            <td>Date Created</td>
+            <td>To</td>
+            <td>Amount</td>
+            <td>Status</td>
+        </thead>
+        {% for t in withdrawals %}
+        <tr>
+            <td>{{ t.reference_id }}</td>
+            <td>{{ t.date_created }}</td>
+            <td>{{ t.sender }}</td>
+            <td>{{ t.amount }}</td>
+            <td>{{ t.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+
 </div>
 
 
