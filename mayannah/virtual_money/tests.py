@@ -82,4 +82,4 @@ class TransactionTestCase(TestCase):
         # sum of all withdrawals
         self.assertEqual(withdrawals, 250)
         # Total virtual money
-        self.asserEqual(money, 750)
+        self.assertEqual(money, 750)
