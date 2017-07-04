@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from virtual_money.models import Transaction
+from django.db.models import Q
 
 import arrow
 import logging
@@ -127,7 +128,8 @@ class TransactionDetail(generics.RetrieveAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Transaction.objects.filter(sender=user)
+        return Transaction.objects.filter(
+                Q(account=user) | Q(remitter=user))
 
 class TransactionCreate(generics.CreateAPIView):
     serializer_class = TransactionSerializer
@@ -138,6 +140,26 @@ class TransactionCreate(generics.CreateAPIView):
         serializer.save(sender=self.request.user)
 
     def post(self, request, *args, **kwargs):
+        data = request.data
+        # get total money at hand of sender
+        #
+        deposits = Transaction.deposits.receive(self.request.user)
+        send = Transaction.deposits.send(self.request.user)
+        withdrawals = Transaction.withdraws.receive(self.request.user)
+
+        # Get the Paid Sum of
+        # Deposits, Sent Money, and Withdrawals
+        deposits_paid_sum = sum(
+                [t.amount for t in deposits.filter(status="PAID")])
+        send_paid_sum = sum(
+                [t.amount for t in send.filter(status="PAID")])
+        withdrawals_paid_sum = sum(
+                [t.amount for t in withdrawals.filter(status="PAID")])
+
+        spent = send_paid_sum + withdrawals_paid_sum
+        if spent > deposits_paid_sum:
+            return Response({"DATA": "Not enough Money"}, status.HTTP_423_LOCKED)
+        money = deposits_paid_sum - spent
         return self.create(request, *args, **kwargs)
 
 def status_check(status):

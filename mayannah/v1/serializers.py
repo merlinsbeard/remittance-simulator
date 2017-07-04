@@ -95,20 +95,24 @@ class TransactionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User Not Existing")
         return person
 
+    def validate_sender(self, value):
+        raise serializers.ValidationError("value")
+
 
 class TransactionDetailSerializer(serializers.ModelSerializer):
-    sender = serializers.StringRelatedField()
-    receiver = serializers.StringRelatedField()
+    remitter = serializers.StringRelatedField()
+    account = serializers.StringRelatedField()
 
     class Meta:
         model = Transaction
         fields = (
                 "reference_id",
-                "receiver",
-                "sender",
+                "remitter",
+                "account",
                 "amount",
                 "date_created",
                 "status",
+                "type",
                 )
 
 
