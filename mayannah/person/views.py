@@ -21,32 +21,23 @@ class ProfileDetail(LoginRequiredMixin, DetailView):
         """Show total amount of money"""
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         user = self.request.user
+
+
         transactions = Transaction.objects.filter(
-                Q(receiver=user) | Q(sender=user))
+                Q(account=user) | Q(remitter=user))
 
-        # Filter and sort all transactions by
-        # Deposits, Send, and Withdrawals
-        # of currently logged user
-        deposits = Transaction.deposits.receive(self.request.user)
-        send = Transaction.deposits.send(self.request.user)
-        withdrawals = Transaction.withdraws.receive(self.request.user)
+        accounts = transactions.filter(account=user)
+        # cash to online
+        deposits = accounts.filter(type="DEPOSIT")
+        # online to cash
+        withdrawals = transactions.filter(type="WITHDRAW")
+        # online to online
+        transfers = accounts.filter(type="TRANSFER")
 
-        # Get the Paid Sum of
-        # Deposits, Sent Money, and Withdrawals
-        deposits_paid_sum = sum(
-                [t.amount for t in deposits.filter(status="PAID")])
-        send_paid_sum = sum(
-                [t.amount for t in send.filter(status="PAID")])
-        withdrawals_paid_sum = sum(
-                [t.amount for t in withdrawals.filter(status="PAID")])
-
-        money = deposits_paid_sum - (send_paid_sum + withdrawals_paid_sum)
-
-        context["money"] = money
-        context["deposits"] = deposits.order_by('-date_created')
-        context["withdrawals"] = withdrawals.order_by('-date_created')
-        context["transactions"] = transactions.order_by('-date_created')
-        context["send"] = send.order_by('-date_created')
+        context['deposits'] = deposits
+        context['withdrawals'] = withdrawals
+        context['transfers'] = transfers
+        context['received'] = accounts
 
         return context
 
@@ -56,4 +47,5 @@ class ProfileTransactionList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Only show users transactions."""
-        return Transaction.objects.filter(sender=self.request.user)
+        return Transaction.objects.filter(
+                Q(account=self.request.user) | Q(remitter=self.request.user))
