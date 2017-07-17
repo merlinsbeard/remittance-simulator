@@ -7,5 +7,6 @@ exec gunicorn config.wsgi:application \
     --name docker_mayannah \
     --workers 2 \
     --log-level=info \
+    --access-logfile - \
 "$@"
 echo ohmmm
