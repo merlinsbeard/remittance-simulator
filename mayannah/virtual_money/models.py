@@ -48,3 +48,29 @@ class Transaction(models.Model):
 
     def __str__(self):
         return self.reference_id
+
+
+class Branch(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class TransactionHistory(models.Model):
+    reference_id = models.CharField(max_length=255, unique=True)
+    account = models.ForeignKey(User)
+    amount = models.IntegerField()
+    status = models.CharField(max_length=100,
+                              choices=STATUS,
+                              default="AVAILABLE")
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    type = models.CharField(max_length=100,
+                            choices=TRANSACTION_TYPE,
+                            default="DEPOSIT")
+    branch = models.ForeignKey(Branch, related_name='branch')
+
+    def __str__(self):
+        return self.reference_id
