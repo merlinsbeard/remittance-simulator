@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from partner.models import Person, Remittance
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction,TransactionHistory
 from django.contrib.auth.models import User
 
 
@@ -85,7 +85,6 @@ class TransactionSerializer(serializers.ModelSerializer):
                 "sender",
                 "amount",
                 "date_created",
-                "is_deposit",
                 )
 
     def validate_receiver(self, value):
@@ -100,15 +99,15 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class TransactionDetailSerializer(serializers.ModelSerializer):
-    remitter = serializers.StringRelatedField()
     account = serializers.StringRelatedField()
+    branch = serializers.StringRelatedField()
 
     class Meta:
-        model = Transaction
+        model = TransactionHistory
         fields = (
                 "reference_id",
-                "remitter",
                 "account",
+                "branch",
                 "amount",
                 "date_created",
                 "status",

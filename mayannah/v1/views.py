@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction, TransactionHistory
 from django.db.models import Q
 
 import arrow
@@ -128,8 +128,7 @@ class TransactionDetail(generics.RetrieveAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Transaction.objects.filter(
-                Q(account=user) | Q(remitter=user))
+        return TransactionHistory.objects.filter(account=user)
 
 class TransactionCreate(generics.CreateAPIView):
     serializer_class = TransactionSerializer
