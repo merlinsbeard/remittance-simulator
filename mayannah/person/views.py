@@ -1,7 +1,7 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Person
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction, TransactionHistory, Branch
 from django.db.models import Q
 
 
@@ -22,22 +22,17 @@ class ProfileDetail(LoginRequiredMixin, DetailView):
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         user = self.request.user
 
+        deposits = TransactionHistory.objects.filter(account=user,
+                                                     type="DEPOSIT")
+        withdrawals = TransactionHistory.objects.filter(account=user,
+                                                        type="WITHDRAW")
 
-        transactions = Transaction.objects.filter(
-                Q(account=user) | Q(remitter=user))
-
-        accounts = transactions.filter(account=user)
-        # cash to online
-        deposits = accounts.filter(type="DEPOSIT")
-        # online to cash
-        withdrawals = transactions.filter(type="WITHDRAW")
-        # online to online
-        transfers = accounts.filter(type="TRANSFER")
+        sum_deposits = sum([n.amount for n in deposits])
+        sum_withdraws = sum([n.amount for n in withdrawals])
 
         context['deposits'] = deposits
         context['withdrawals'] = withdrawals
-        context['transfers'] = transfers
-        context['received'] = accounts
+        context['moneys'] = sum_deposits - sum_withdraws
 
         return context
 
