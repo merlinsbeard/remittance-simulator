@@ -21,14 +21,14 @@ class ProfileDetail(LoginRequiredMixin, DetailView):
         """Show total amount of money"""
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         user = self.request.user
+        tr = TransactionHistory.objects.filter(account=user)
 
-        deposits = TransactionHistory.objects.filter(account=user,
-                                                     type="DEPOSIT")
-        withdrawals = TransactionHistory.objects.filter(account=user,
-                                                        type="WITHDRAW")
+        deposits = tr
+        withdrawals = tr.filter(type="WITHDRAW")
 
-        sum_deposits = sum([n.amount for n in deposits])
-        sum_withdraws = sum([n.amount for n in withdrawals])
+        sum_deposits = sum([n.amount for n in deposits.filter(status="PAID")])
+        sum_withdraws = sum([n.amount for n in
+            withdrawals.filter(status="PAID")])
 
         context['deposits'] = deposits
         context['withdrawals'] = withdrawals
