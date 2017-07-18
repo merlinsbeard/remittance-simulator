@@ -7,7 +7,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction, TransactionHistory
+from django.db.models import Q
+from django.contrib.auth.models import User
 
 import arrow
 import logging
@@ -127,17 +129,15 @@ class TransactionDetail(generics.RetrieveAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Transaction.objects.filter(sender=user)
+        return TransactionHistory.objects.filter(account=user)
 
 class TransactionCreate(generics.CreateAPIView):
     serializer_class = TransactionSerializer
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
-
     def post(self, request, *args, **kwargs):
+        data = request.data
         return self.create(request, *args, **kwargs)
 
 def status_check(status):
@@ -176,7 +176,7 @@ class TransactionPay(generics.UpdateAPIView):
                 "message": "Blank"}
 
         try:
-            transaction = Transaction.objects.get(reference_id=transaction)
+            transaction = TransactionHistory.objects.get(reference_id=transaction)
         except Transaction.DoesNotExist:
             message['status'] = 'Error'
             message['message'] = "Does Not exists"

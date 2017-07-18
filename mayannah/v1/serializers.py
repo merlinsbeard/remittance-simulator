@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from partner.models import Person, Remittance
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction,TransactionHistory, Branch
 from django.contrib.auth.models import User
 
 
@@ -74,41 +74,76 @@ class RemittancePaySerializer(serializers.Serializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    receiver = serializers.CharField(max_length=255)
-    sender = serializers.StringRelatedField()
+    account = serializers.CharField(max_length=255)
+    branch = serializers.CharField(max_length=255)
+    reference_id = serializers.ReadOnlyField()
 
     class Meta:
-        model = Transaction
+        model = TransactionHistory
         fields = (
                 "reference_id",
-                "receiver",
-                "sender",
+                "account",
+                "branch",
                 "amount",
-                "date_created",
-                "is_deposit",
+                "type",
                 )
 
-    def validate_receiver(self, value):
+    def validate_account(self, value):
         try:
             person = User.objects.get(username=value)
         except User.DoesNotExist:
             raise serializers.ValidationError("User Not Existing")
         return person
 
+    def validate_branch(self, value):
+        try:
+            branch = Branch.objects.get(name=value)
+        except Branch.DoesNotExist:
+            raise serializers.ValidationError("Branch Does Not Exists")
+        return branch
+
+    def validate(self, value):
+        # Perform user amount checking
+
+        if value['type'] == "WITHDRAW":
+            user = User.objects.get(username=value['account'])
+            transactions = TransactionHistory.objects.filter(account=user)
+            deposits = transactions.filter(
+                                    type="DEPOSIT"
+                                  ).filter(
+                                    status="PAID")
+            withdraws = transactions.filter(
+                                    type="WITHDRAW"
+                                  ).filter(
+                                    status="PAID")
+            deposits_sum = sum([n.amount for n in deposits])
+            withdraws_sum = sum([n.amount for n in withdraws])
+            money = deposits_sum - withdraws_sum
+
+            if money < value['amount']:
+                raise serializers.ValidationError(
+                                "Not enough money to withdraw")
+
+        if value['amount'] < 1:
+            raise serializers.ValidationError("Amount too Small")
+
+        return value
+
 
 class TransactionDetailSerializer(serializers.ModelSerializer):
-    sender = serializers.StringRelatedField()
-    receiver = serializers.StringRelatedField()
+    account = serializers.StringRelatedField()
+    branch = serializers.StringRelatedField()
 
     class Meta:
-        model = Transaction
+        model = TransactionHistory
         fields = (
                 "reference_id",
-                "receiver",
-                "sender",
+                "account",
+                "branch",
                 "amount",
                 "date_created",
                 "status",
+                "type",
                 )
 
 

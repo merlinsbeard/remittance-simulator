@@ -8,11 +8,11 @@
         {{ object.description }}
     </p>
     <p>MONEY
-    {{ money }}</p>
+    {{ moneys }}</p>
 </div>
 
 <div class="container">
-    <h3>Received</h3>
+    <h3>Deposits</h3>
     <table class="bordered">
         <thead>
             <td>Reference ID</td>
@@ -25,32 +25,13 @@
         <tr>
             <td>{{ t.reference_id }}</td>
             <td>{{ t.date_created }}</td>
-            <td>{{ t.sender }}</td>
+            <td>{{ t.branch }}</td>
             <td>{{ t.amount }}</td>
             <td>{{ t.status }}</td>
         </tr>
         {% endfor %}
     </table>
 
-    <h3>Transfered</h3>
-    <table class="bordered">
-        <thead>
-            <td>Reference ID</td>
-            <td>Date Created</td>
-            <td>To</td>
-            <td>Amount</td>
-            <td>Status</td>
-        </thead>
-        {% for t in send %}
-        <tr>
-            <td>{{ t.reference_id }}</td>
-            <td>{{ t.date_created }}</td>
-            <td>{{ t.sender }}</td>
-            <td>{{ t.amount }}</td>
-            <td>{{ t.status }}</td>
-        </tr>
-        {% endfor %}
-    </table>
 
     <h3>Withdrawn</h3>
     <table class="bordered">
@@ -65,7 +46,7 @@
         <tr>
             <td>{{ t.reference_id }}</td>
             <td>{{ t.date_created }}</td>
-            <td>{{ t.sender }}</td>
+            <td>{{ t.branch }}</td>
             <td>{{ t.amount }}</td>
             <td>{{ t.status }}</td>
         </tr>

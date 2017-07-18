@@ -1,7 +1,7 @@
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Person
-from virtual_money.models import Transaction
+from virtual_money.models import Transaction, TransactionHistory, Branch
 from django.db.models import Q
 
 
@@ -21,32 +21,18 @@ class ProfileDetail(LoginRequiredMixin, DetailView):
         """Show total amount of money"""
         context = super(ProfileDetail, self).get_context_data(**kwargs)
         user = self.request.user
-        transactions = Transaction.objects.filter(
-                Q(receiver=user) | Q(sender=user))
+        tr = TransactionHistory.objects.filter(account=user)
 
-        # Filter and sort all transactions by
-        # Deposits, Send, and Withdrawals
-        # of currently logged user
-        deposits = Transaction.deposits.receive(self.request.user)
-        send = Transaction.deposits.send(self.request.user)
-        withdrawals = Transaction.withdraws.receive(self.request.user)
+        deposits = tr
+        withdrawals = tr.filter(type="WITHDRAW")
 
-        # Get the Paid Sum of
-        # Deposits, Sent Money, and Withdrawals
-        deposits_paid_sum = sum(
-                [t.amount for t in deposits.filter(status="PAID")])
-        send_paid_sum = sum(
-                [t.amount for t in send.filter(status="PAID")])
-        withdrawals_paid_sum = sum(
-                [t.amount for t in withdrawals.filter(status="PAID")])
+        sum_deposits = sum([n.amount for n in deposits.filter(status="PAID")])
+        sum_withdraws = sum([n.amount for n in
+            withdrawals.filter(status="PAID")])
 
-        money = deposits_paid_sum - (send_paid_sum + withdrawals_paid_sum)
-
-        context["money"] = money
-        context["deposits"] = deposits.order_by('-date_created')
-        context["withdrawals"] = withdrawals.order_by('-date_created')
-        context["transactions"] = transactions.order_by('-date_created')
-        context["send"] = send.order_by('-date_created')
+        context['deposits'] = deposits
+        context['withdrawals'] = withdrawals
+        context['moneys'] = sum_deposits - sum_withdraws
 
         return context
 
@@ -56,4 +42,5 @@ class ProfileTransactionList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Only show users transactions."""
-        return Transaction.objects.filter(sender=self.request.user)
+        return Transaction.objects.filter(
+                Q(account=self.request.user) | Q(remitter=self.request.user))
