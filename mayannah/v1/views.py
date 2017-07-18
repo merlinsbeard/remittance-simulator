@@ -9,6 +9,7 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from virtual_money.models import Transaction, TransactionHistory
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 import arrow
 import logging
@@ -136,29 +137,10 @@ class TransactionCreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
+        serializer.save(account=self.request.user)
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        # get total money at hand of sender
-        #
-        deposits = Transaction.deposits.receive(self.request.user)
-        send = Transaction.deposits.send(self.request.user)
-        withdrawals = Transaction.withdraws.receive(self.request.user)
-
-        # Get the Paid Sum of
-        # Deposits, Sent Money, and Withdrawals
-        deposits_paid_sum = sum(
-                [t.amount for t in deposits.filter(status="PAID")])
-        send_paid_sum = sum(
-                [t.amount for t in send.filter(status="PAID")])
-        withdrawals_paid_sum = sum(
-                [t.amount for t in withdrawals.filter(status="PAID")])
-
-        spent = send_paid_sum + withdrawals_paid_sum
-        if spent > deposits_paid_sum:
-            return Response({"DATA": "Not enough Money"}, status.HTTP_423_LOCKED)
-        money = deposits_paid_sum - spent
         return self.create(request, *args, **kwargs)
 
 def status_check(status):
@@ -197,7 +179,7 @@ class TransactionPay(generics.UpdateAPIView):
                 "message": "Blank"}
 
         try:
-            transaction = Transaction.objects.get(reference_id=transaction)
+            transaction = TransactionHistory.objects.get(reference_id=transaction)
         except Transaction.DoesNotExist:
             message['status'] = 'Error'
             message['message'] = "Does Not exists"
