@@ -76,7 +76,7 @@ class RemittancePaySerializer(serializers.Serializer):
 class TransactionSerializer(serializers.ModelSerializer):
     account = serializers.CharField(max_length=255)
     branch = serializers.CharField(max_length=255)
-    #branch = serializers.StringRelatedField()
+    reference_id = serializers.ReadOnlyField()
 
     class Meta:
         model = TransactionHistory

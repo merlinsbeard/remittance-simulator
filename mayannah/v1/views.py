@@ -136,9 +136,6 @@ class TransactionCreate(generics.CreateAPIView):
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        serializer.save(account=self.request.user)
-
     def post(self, request, *args, **kwargs):
         data = request.data
         return self.create(request, *args, **kwargs)
