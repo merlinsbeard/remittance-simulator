@@ -226,11 +226,11 @@ Response:
 ]
 ```
 
-#### List Remittance Details
+#### SEARCH Specific Remittance
 
-Returns a dictionary of the detail of a specific remittance
+Returns a result of specific Remittance
 
-`GET /v1/remittance/<remittance_slug>/`
+`POST /v1/remittance/<remittance_slug>/`
 
 Parameter
 
@@ -275,7 +275,7 @@ Response:
 
 Updates the status of remittance record to PAID. Only available transactions can be PAID.
 
-`POST /v1/remittance/<remittance_slug>/pay`
+`POST /v1/remittance/pay`
 
 Inputs:
 
@@ -304,8 +304,74 @@ Curl:
 
 ```
 curl --request POST \
-  --url http://localhost:8000/v1/remittance/remittance-quatro/pay/ \
+  --url http://localhost:8000/v1/remittance/pay/ \
   --header 'authorization: Basic Ymo6aWRvbnRrbm93MTI=' \
   --header 'content-type: application/json' \
   --data '{"source_reference_number": "remittance-quatro"}'
+```
+
+
+## Deposit And Withdraw Virtual Money
+
+Deposit or Withdraw money to a users account
+
+`POST /v1/transaction/`
+
+Inputs:
+
+|Name|Type|Description|
+|--------|--------|----------------|
+|account| string | Name of user account |
+|branch| string | Branch Name |
+|amount| integer | Amount more than 1 |
+|type| string | DEPOSIT or WITHDRAW |
+
+Sample Request:
+
+```bash
+curl --request POST \
+  --url http://localhost:8002/v1/transaction/complete \
+  --header 'authorization: Basic bWVybGluc2JlYXJkOmlkb250a25vdzEy' \
+  --header 'content-type: application/json' \
+  --data '{"account": "bj",
+	   "branch": "ayannah",
+	   "amount": 200,
+	   "type": "DEPOSIT"}'
+```
+
+Response
+
+```json
+{
+	"reference_id": "a133925d-6276-4cb7-9364-0dd70939a966",
+	"account": "bj",
+	"branch": "ayannah",
+	"amount": 200,
+	"type": "DEPOSIT"
+}
+```
+
+## Complete a Transaction (mark it complete)
+
+Inputs
+
+|Name|Type|Description|
+|--------|--------|----------------|
+|Source Reference Number| string | Source Reference Number of transaction |
+
+
+```bash
+curl --request POST \
+  --url http://localhost:8002/v1/transaction/complete/ \
+  --header 'authorization: Basic Ymo6aWRvbnRrbm93MTI=' \
+  --header 'content-type: application/json' \
+  --data '{"reference_id": "a133925d-6276-4cb7-9364-0dd70939a966"}'
+```
+
+Response:
+
+```json
+{
+	"status": "Already Paid"
+}
 ```
