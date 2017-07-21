@@ -44,19 +44,7 @@ class RemittanceList(generics.ListCreateAPIView):
         return self.create(request, *args, **kwargs)
 
 
-class RemittanceDetail(generics.RetrieveUpdateAPIView):
-    """Returns the specific remittance detail based on slug.
-
-    Has GET and PUT
-
-    GET is used to retrieve the details of Remittance
-    Usage:
-        GET /v1/remittance/<slug>
-
-    PUT is used to update a specific field of remittance
-    Usage:
-        PUT /v1/remittance/<slug>
-    """
+class RemittanceGetDetail(generics.RetrieveUpdateAPIView):
     queryset = Remittance.objects.all()
     serializer_class = RemittanceSerializer
     authentication_classes = (BasicAuthentication,)
@@ -70,13 +58,40 @@ class RemittanceDetail(generics.RetrieveUpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 
+class RemittanceDetail(generics.GenericAPIView):
+    """Returns the specific remittance detail.
+
+    Has POST only
+
+    POST is used to retrieve the details of Remittance
+    Usage:
+        POST /v1/remittance/search
+
+        {"source_reference_number": "sample-uno"}
+
+    """
+    queryset = Remittance.objects.all()
+    serializer_class = RemittanceSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        ref_num = data['source_reference_number']
+        try:
+            remittance = Remittance.objects.get(
+                            source_reference_number=ref_num)
+        except:
+            return Response("ERROR")
+
+        serialized_data = RemittanceSerializer(remittance)
+
+        return Response(serialized_data.data)
+
 class RemittancePay(generics.GenericAPIView):
     """Tag Remittance Transaction as Paid."""
     queryset = Remittance.objects.all()
     serializer_class = RemittancePaySerializer
     authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
-    lookup_field = 'slug'
 
     def status_check(self, remittance_status):
         codes = {
@@ -102,8 +117,9 @@ class RemittancePay(generics.GenericAPIView):
             return codes['ERROR']
 
     def post(self, request, *args, **kwargs):
-        remittance = self.get_object()
         data = request.data
+        remittance = Remittance.objects.get(
+                source_reference_number=data['source_reference_number'])
 
         status_check = self.status_check(remittance.status)
         if status_check['status'] != "Success":

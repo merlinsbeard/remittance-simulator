@@ -5,8 +5,8 @@ from v1.views import RemittanceList, RemittanceDetail, RemittancePay, \
 
 urlpatterns = [
         url(r'^remittance/$', RemittanceList.as_view()),
-        url(r'^remittance/(?P<slug>[-\w]+)/$', RemittanceDetail.as_view()),
-        url(r'^remittance/(?P<slug>[-\w]+)/pay/$',
+        url(r'^remittance/search/$', RemittanceDetail.as_view()),
+        url(r'^remittance/pay/$',
                     RemittancePay.as_view()),
         # Transactions
         url(r'^transaction/$', TransactionCreate.as_view()),
