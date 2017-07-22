@@ -13,3 +13,9 @@ after_install:
 
 script:
     - docker exec -it mayannah python manage.py test
+
+after_success:
+    - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+      docker push hallocaffeine/mayannah;
+      fi
