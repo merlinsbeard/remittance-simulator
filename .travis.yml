@@ -17,6 +17,6 @@ script:
 after_success:
     - if [ "$TRAVIS_BRANCH" == "master" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-      docker tag mayannah hallocaffeine/mayannah
+      docker tag mayannah hallocaffeine/mayannah;
       docker push hallocaffeine/mayannah;
       fi
