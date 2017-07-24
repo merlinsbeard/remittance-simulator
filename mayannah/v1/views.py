@@ -80,7 +80,7 @@ class RemittanceDetail(generics.GenericAPIView):
             remittance = Remittance.objects.get(
                             source_reference_number=ref_num)
         except:
-            return Response("ERROR")
+            return Response("ERROR", status=status.HTTP_400_BAD_REQUEST)
 
         serialized_data = RemittanceSerializer(remittance)
 
@@ -134,7 +134,7 @@ class RemittancePay(generics.GenericAPIView):
             message = "Successfully Tagged as Paid"
             return Response({"message": message})
         else:
-            return Response({"FAIL": "FAIL"})
+            return Response({"FAIL": "FAIL"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TransactionDetail(generics.RetrieveAPIView):
