@@ -4,9 +4,9 @@ services:
     - docker
 
 before_install:
-    - docker run --name mayannah_db --env POSTGRES_DB=mayannah -d postgres:9.5
+    - docker run --name mayannah-db --env POSTGRES_DB=mayannah -d postgres:9.5
     - docker build -t mayannah .
-    - docker run --name mayannah --link mayannah_db -d mayannah
+    - docker run --name mayannah --link mayannah-db -d mayannah
 
 after_install:
     - docker exec -it mayannah python manage.py migrate
