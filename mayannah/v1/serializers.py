@@ -21,6 +21,7 @@ class PersonSerializer(serializers.ModelSerializer):
 class RemittanceSerializer(serializers.HyperlinkedModelSerializer):
     remitter = PersonSerializer()
     beneficiary = PersonSerializer()
+    status = serializers.ReadOnlyField()
 
     class Meta:
         model = Remittance
