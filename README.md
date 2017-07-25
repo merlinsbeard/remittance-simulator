@@ -16,6 +16,11 @@ $ cd mayannah
 $ docker build -t mayannah:latest .
 # link to a postgresql container
 $ docker run --name mayannah --link mayannah-db -d mayannah:latest
+# For Customize settings
+#$ docker run --name mayannah \
+#             --link mayannah-db \
+#             -v $PWD/prod.env:/mayannah/prod.env
+#             -d mayannah:latest
 # Create a superuser
 $ docker exec -it mayannah python manage.py createsuperuser
 # open in browser 
@@ -230,7 +235,7 @@ Response:
 
 Returns a result of specific Remittance
 
-`POST /v1/remittance/<remittance_slug>/`
+`POST /v1/remittance/`
 
 Parameter
 
