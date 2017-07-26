@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+
+def staging(request):
+    return HttpResponse(status=200)
+
+
+def production(request):
+    return HttpResponse(status=500)
