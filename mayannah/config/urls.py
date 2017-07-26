@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^v1/', include('v1.urls', namespace='v1')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^profile/', include('person.urls', namespace='profile')),
+    url(r'^health/', include('health.urls', namespace='health')),
     url('^$', RedirectView.as_view(pattern_name='profile:self'), name='home'),
 ]
