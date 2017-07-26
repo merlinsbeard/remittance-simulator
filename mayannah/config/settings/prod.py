@@ -47,3 +47,20 @@ AUTHENTICATION_BACKENDS = (
 SITE_ID = 1
 LOGIN_REDIRECT_URL = 'profile:self'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# DJANGO REST FRAMEWORK settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+                ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+            'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# JWT SETTINGS
+JWT_AUTH = {
+        'JWT_VERIFY_EXPIRATION': False,
+}
