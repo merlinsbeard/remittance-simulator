@@ -73,9 +73,30 @@ Admin Page is used to create Users, It can also create, edit, and view Remittanc
 
 #### Authentication
 
-*Basic Authentication* is required for all API calls. All users with login credentials can access the API. 
+*Basic Authentication* or *JWT Token* is required for all API calls. All users with login credentials can access the API. 
 
 Use Admin page to create a User.
+
+For JWT Token Generation:
+
+```bash
+$ curl -X POST -H "Content-Type: application/json" \
+               -d '{"token":"<EXISTING_TOKEN>"}' \
+               http://localhost:8000/api-token-refresh/
+```
+
+Sample Response:
+
+```json
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJqIiwiZXhwIjoxNTAxMDUyMTA3LCJlbWFpbCI6IiJ9.9hEn-Ra1YiDXgQaHOkNIvmGArLNpeapo5egwAM7jyOM"
+}
+```
+
+All headers must now contain:
+
+`authorization: JWT <token>`
+
 
 #### Create Remittance
 
@@ -328,7 +349,7 @@ Curl:
 ```
 curl --request POST \
   --url http://localhost:8000/v1/remittance/pay/ \
-  --header 'authorization: Basic Ymo6aWRvbnRrbm93MTI=' \
+  --header 'authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJqIiwiZXhwIjoxNTAxMDUyMTA3LCJlbWFpbCI6IiJ9.9hEn-Ra1YiDXgQaHOkNIvmGArLNpeapo5egwAM7jyOM' \
   --header 'content-type: application/json' \
   --data '{"source_reference_number": "remittance-quatro"}'
 ```
@@ -354,7 +375,7 @@ Sample Request:
 ```bash
 curl --request POST \
   --url http://localhost:8002/v1/transaction/complete \
-  --header 'authorization: Basic bWVybGluc2JlYXJkOmlkb250a25vdzEy' \
+  --header 'authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJqIiwiZXhwIjoxNTAxMDUyMTA3LCJlbWFpbCI6IiJ9.9hEn-Ra1YiDXgQaHOkNIvmGArLNpeapo5egwAM7jyOM' \
   --header 'content-type: application/json' \
   --data '{"account": "bj",
 	   "branch": "ayannah",
@@ -386,7 +407,7 @@ Inputs
 ```bash
 curl --request POST \
   --url http://localhost:8002/v1/transaction/complete/ \
-  --header 'authorization: Basic Ymo6aWRvbnRrbm93MTI=' \
+  --header 'authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJqIiwiZXhwIjoxNTAxMDUyMTA3LCJlbWFpbCI6IiJ9.9hEn-Ra1YiDXgQaHOkNIvmGArLNpeapo5egwAM7jyOM' \
   --header 'content-type: application/json' \
   --data '{"reference_id": "a133925d-6276-4cb7-9364-0dd70939a966"}'
 ```

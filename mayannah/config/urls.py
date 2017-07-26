@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import RedirectView
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -28,4 +29,8 @@ urlpatterns = [
     url(r'^profile/', include('person.urls', namespace='profile')),
     url(r'^health/', include('health.urls', namespace='health')),
     url('^$', RedirectView.as_view(pattern_name='profile:self'), name='home'),
+    # JWT
+    url(r'^api-token-auth/', obtain_jwt_token),
+    url(r'^api-token-verify/', verify_jwt_token),
+    url(r'^api-token-refresh/', refresh_jwt_token),
 ]

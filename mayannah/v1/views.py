@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from virtual_money.models import Transaction, TransactionHistory
 from django.db.models import Q
 from django.contrib.auth.models import User
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 import arrow
 import logging
@@ -34,7 +35,8 @@ class RemittanceList(generics.ListCreateAPIView):
 
     queryset = Remittance.objects.all()
     serializer_class = RemittanceSerializer
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
@@ -72,6 +74,8 @@ class RemittanceDetail(generics.GenericAPIView):
     """
     queryset = Remittance.objects.all()
     serializer_class = RemittanceSerializer
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
 
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -90,8 +94,9 @@ class RemittancePay(generics.GenericAPIView):
     """Tag Remittance Transaction as Paid."""
     queryset = Remittance.objects.all()
     serializer_class = RemittancePaySerializer
-    authentication_classes = (BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
 
     def status_check(self, remittance_status):
         codes = {
@@ -139,7 +144,8 @@ class RemittancePay(generics.GenericAPIView):
 
 class TransactionDetail(generics.RetrieveAPIView):
     serializer_class = TransactionDetailSerializer
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
     lookup_field = 'reference_id'
 
@@ -149,7 +155,8 @@ class TransactionDetail(generics.RetrieveAPIView):
 
 class TransactionCreate(generics.CreateAPIView):
     serializer_class = TransactionSerializer
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -181,7 +188,8 @@ def status_check(status):
 
 class TransactionPay(generics.UpdateAPIView):
     serializer_class = TransactionCompleteSerializer
-    authentication_classes = (BasicAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication,
+                              BasicAuthentication,)
 
 
     def post(self, request, *args, **kwargs):
