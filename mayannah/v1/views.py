@@ -193,7 +193,7 @@ class TransactionPay(generics.UpdateAPIView):
 
         try:
             transaction = TransactionHistory.objects.get(reference_id=transaction)
-        except Transaction.DoesNotExist:
+        except TransactionHistory.DoesNotExist:
             message['status'] = 'Error'
             message['message'] = "Does Not exists"
             return Response(message, status.HTTP_404_NOT_FOUND)
