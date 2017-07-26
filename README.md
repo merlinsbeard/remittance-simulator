@@ -4,6 +4,24 @@
 
 Simulates a remittance transaction
 
+Content:
+
+
+1. [Installation](#installation)
+1. [Usage](#usage)
+	1. [Environment Variables](#environment-variables)
+	1. [Admin Page](#admin-page)
+	1. [API](#api)
+		1. [Authentication](#authentication)
+		1. [Create Remittance](#create-remittance)
+   		1. [List Remittance](#list-remittance)
+   		1. [Search Remittance](#search-specific-remittance)
+   		1. [Pay Remittance](#pay-remittance)
+		1. [Deposit And Withdraw Virtual Money](#deposit-and-withdraw-virtual-money)
+		1. [Complete or pay a Transaction](#complete-or-pay-a-transaction)
+		1. [Health Check](#health-check)
+
+
 ## Installation
 
 Requirements:
@@ -356,7 +374,7 @@ Response
 }
 ```
 
-## Complete a Transaction (mark it complete)
+## Complete or pay a Transaction
 
 Inputs
 
@@ -380,3 +398,7 @@ Response:
 	"status": "Already Paid"
 }
 ```
+
+## Health Check
+
+`GET /health/<staging or production`
