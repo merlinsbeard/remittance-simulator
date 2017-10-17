@@ -1,6 +1,6 @@
 FROM python:3.6.1
-
-ADD ./mayannah /mayannah
+LABEL maintainer "Bj Paat <bjpaat@dailywarrior.ph>"
+COPY ./mayannah /mayannah
 COPY ./entrypoint.sh /mayannah/
 WORKDIR /mayannah
 RUN pip install --no-cache-dir -r requirements.txt
