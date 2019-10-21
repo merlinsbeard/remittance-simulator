@@ -4,7 +4,7 @@ chardet==3.0.4
 contextlib2==0.5.5
 coolname==0.2.1
 defusedxml==0.5.0
-Django==1.11.2
+Django==1.11.23
 django-allauth==0.32.0
 django-debug-toolbar==1.8
 django-environ==0.4.3
