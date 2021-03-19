@@ -2,7 +2,7 @@ arrow==0.10.0
 Django==1.11.2
 django-debug-toolbar==1.8
 django-environ==0.4.3
-djangorestframework==3.6.3
+djangorestframework==3.11.2
 gunicorn==19.7.1
 psycopg2==2.7.1
 python-dateutil==2.6.0
