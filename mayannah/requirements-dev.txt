@@ -1,5 +1,5 @@
 arrow==0.10.0
-Django==1.11.2
+Django==2.2.24
 django-debug-toolbar==1.8
 django-environ==0.4.3
 djangorestframework==3.6.3
